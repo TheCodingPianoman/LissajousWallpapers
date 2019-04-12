@@ -45,7 +45,7 @@ void draw()
   background(0);
   noFill();
 
-  float d = w - 10;
+  float d = w - 20;
   float r = d/ 2;
 
   //draw cols
