@@ -1,11 +1,11 @@
 int cols;
 int rows;
 int w = 200;
+int inset = 20;
 float x_offset;
 float y_offset; 
 float angle = 0;
 boolean shouldStop;
-Curve[][] curves;
 Figure[][] figures;
 float stepwidth = 0.01;
 boolean canRender;
@@ -18,8 +18,9 @@ void setup()
 
   cols = width / w;
   rows = height / w;
-  x_offset = (width - (float)cols * w) / 2;
-  y_offset = (height - (float)rows * w) / 2;
+  x_offset = ((width - (float)cols * w) / 2);
+  y_offset = ((height - (float)rows * w) / 2);
+  
   figures = new Figure[rows][cols];
 
   float hue = 0;
@@ -29,13 +30,13 @@ void setup()
   {
     for (int col = 0; col < cols; col++)
     {
-      figures[row][col] = new Figure(row, col, w, 20, 0.01, x_offset, y_offset, hue);
+      figures[row][col] = new Figure(row, col, w, inset, stepwidth, hue);
       hue += hue_inc;
     }
   }
 
   canRender = false;
-  thread("generateFigures");
+  //thread("generateFigures");
 }
 
 void generateFigures()
@@ -54,18 +55,27 @@ void draw()
 {  
   background(0);
   noFill();
+  translate(x_offset, y_offset);
+
+  for (int row = 0; row < rows; row++)
+  {
+    for (int col = 0; col < cols; col++)
+    {
+      figures[row][col].tick(angle);
+      figures[row][col].show();
+    }
+  }
+  
+  angle -= stepwidth;
+  if(angle < -TWO_PI)
+  {
+    canRender = true;
+  }
+  
 
   if (canRender)
   {
-    for (int row = 0; row < rows; row++)
-    {
-      for (int col = 0; col < cols; col++)
-      {
-        figures[row][col].show();
-      }
-    }
-
     saveFrame("lissajous.png");
-    exit();
+    stop();
   }
 }

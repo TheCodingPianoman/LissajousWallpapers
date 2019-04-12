@@ -4,26 +4,25 @@ class Curve
   PVector _current;
   float _hue;
   boolean _closed;
+  int _row;
+  int _col;
+  float _stepwidth;
   
   
-  public Curve(float hue)
+  public Curve(float hue, int row, int col, float stepwidth)
   {
     _path = new ArrayList<PVector>();
     _current = new PVector();
     _hue = hue;
     _closed = false;
+    _row = row;
+    _col = col;
+    _stepwidth = stepwidth;
   }
   
   public void addPoint()
   {
-    if(_path.isEmpty() || _current.x != _path.get(0).x && _current.y != _path.get(0).y)
-    {
-      _path.add(_current);
-    }
-    else
-    {
-      _closed = true;
-    }
+    _path.add(_current);
     _current = new PVector();
   }
   
@@ -53,8 +52,5 @@ class Curve
       vertex(v.x, v.y);
     }
     endShape();
-    
-    //strokeWeight(8);
-    //point(_path.get(_path.size() - 1).x, _path.get(_path.size() - 1).y); 
   }
 }
