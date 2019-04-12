@@ -3,6 +3,7 @@ class Curve
   ArrayList<PVector> _path;
   PVector _current;
   float _hue;
+  boolean _closed;
   
   
   public Curve(float hue)
@@ -10,11 +11,19 @@ class Curve
     _path = new ArrayList<PVector>();
     _current = new PVector();
     _hue = hue;
+    _closed = false;
   }
   
   public void addPoint()
   {
-    _path.add(_current);
+    if(_path.isEmpty() || _current.x != _path.get(0).x && _current.y != _path.get(0).y)
+    {
+      _path.add(_current);
+    }
+    else
+    {
+      _closed = true;
+    }
     _current = new PVector();
   }
   
@@ -26,6 +35,11 @@ class Curve
   public void setY(float y)
   {
     _current.y = y;
+  }
+  
+  public boolean isClosed()
+  {
+    return _closed;
   }
   
   public void show()
