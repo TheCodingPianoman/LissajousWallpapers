@@ -1,7 +1,7 @@
 int cols;
 int rows;
-int w = 200;
-int inset = 20;
+int w = 400;
+int inset = 200;
 float x_offset;
 float y_offset; 
 float angle = 0;
