@@ -51,6 +51,6 @@ class Curve
     {
       vertex(v.x, v.y);
     }
-    endShape();
+    endShape(CLOSE);
   }
 }

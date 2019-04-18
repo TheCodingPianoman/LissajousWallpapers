@@ -34,7 +34,7 @@ class Figure
   {
     float angle = 0;
 
-    while (angle > -TWO_PI && !_curve.isClosed())
+    while (angle > -TWO_PI)
     {
       float cx = _colMultiplier * _width + _width / 2;
       float cy = _rowMultiplier * _width + _width / 2;

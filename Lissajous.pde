@@ -9,18 +9,22 @@ boolean shouldStop;
 Figure[][] figures;
 float stepwidth = 0.01;
 boolean canRender;
+boolean figuresGenerating;
+
+PFont font;
 
 void setup()
 {
   fullScreen(P2D);
   pixelDensity(displayDensity());
   colorMode(HSB);
+  font = createFont("Arial", 38, true);
 
   cols = width / w;
   rows = height / w;
   x_offset = ((width - (float)cols * w) / 2);
   y_offset = ((height - (float)rows * w) / 2);
-  
+
   figures = new Figure[rows][cols];
 
   float hue = 0;
@@ -36,11 +40,12 @@ void setup()
   }
 
   canRender = false;
-  //thread("generateFigures");
+  figuresGenerating = false;
 }
 
 void generateFigures()
 {
+  figuresGenerating = true;
   for (int row = 0; row < rows; row++)
   {
     for (int col = 0; col < cols; col++)
@@ -48,33 +53,42 @@ void generateFigures()
       figures[row][col].generate();
     }
   }
+  figuresGenerating = false;
   canRender = true;
 }
 
 void draw()
 {  
-  background(0);
-  noFill();
-  translate(x_offset, y_offset);
+  if (!canRender)
+  {
+    background(0);
+    textAlign(CENTER);
+    textFont(font);
+    fill(255);
+    text("Generating figures...", width/2, height/2);
+  }
 
-  for (int row = 0; row < rows; row++)
+  //In order to be able to draw something while figures are generated, we need to start
+  //the thread from within the draw-Loop. Figures only need to be generated, if
+  //figures are not generating yet and also cannot be rendered yet.
+  if (!figuresGenerating && !canRender)
   {
-    for (int col = 0; col < cols; col++)
-    {
-      figures[row][col].tick(angle);
-      figures[row][col].show();
-    }
+    thread("generateFigures");
   }
-  
-  angle -= stepwidth;
-  if(angle < -TWO_PI)
-  {
-    canRender = true;
-  }
-  
 
   if (canRender)
   {
+    background(0);
+    noFill();
+    translate(x_offset, y_offset);
+
+    for (int row = 0; row < rows; row++)
+    {
+      for (int col = 0; col < cols; col++)
+      {
+        figures[row][col].show();
+      }
+    }
     saveFrame("lissajous.png");
     stop();
   }
